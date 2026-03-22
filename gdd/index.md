@@ -2,9 +2,11 @@
 
 # Abbreviations
 
-   BC - Battle City
-   BCR - Battle City Royale
-   CD - Cool Down
+BC - Battle City
+
+BCR - Battle City Royale
+
+CD - Cool Down
 
 # Concept
 
@@ -26,8 +28,11 @@ Additions from the Battle Royale genre (to the rules above):
 
 
 Battle City Royale features (partly inspired by Ring of Elysium, Game for Peace, PUBG):
+
 The map consists of 100 rooms (10x10). A room is a standard Battle City map. Transitions between rooms are performed through the room borders. Players can only see the room they are currently in. What happens in other rooms is hidden from them. The player's camera is not attached to the tank and is fixed to the current room.
+
 The dangerous zone begins to appear from the edge of the map. A room becomes part of the dangerous zone all at once. Before a room turns into a dangerous zone, players see a warning and a countdown. Players have access to a mini-map with all rooms so they can see where the safe zone will be and move there.
+
 In the center of the final remaining safe room, a base will appear that players must drive into to win.
 Players have an additional meter: dangerous-zone health, which decreases while they are in the dangerous zone. Over time, the drain speed increases. The meter restores at a rate of 1 unit/sec. The player loses when this meter reaches 0.
 
@@ -49,8 +54,11 @@ For BCR:
 
 
 All parameters will be converted using these formulas:
+
 1 frame = 1/64 sec
+
 1 px = 1/16 cell
+
 1 px/frame = 4 cells/sec
 
 Distance between objects is measured using Manhattan distance.
@@ -58,42 +66,57 @@ Distance between objects is measured using Manhattan distance.
 ### Movement
 
 The player controls only their own tank.
+
 Movement is possible in only one direction at a time: either horizontal or vertical.
+
 When colliding with obstacles, the tank stops. Obstacles are: walls, water, other tanks. When colliding with a bonus, the bonus is applied.
+
 Tank movement speed: 3 cells/sec, numeric values taken from BC.
 
 ### Shooting
 
 The tank can shoot. When firing, the projectile appears from the center of the front side of the player's tank (the cannon on the sprite).
+
 In BC the player could have only 1 projectile on the map and could shoot again only after that projectile was destroyed. In BCR this restriction is removed.
+
 Fire rate comes in two variants: slow (CD 1 sec) and fast (CD 0.5 sec). The CD values are chosen so that projectiles fly with gaps of 8 cells (4 for fast) and there is 1 projectile per half of a room field (2 for fast).
 
 ### Projectiles
 
 Projectiles have two speed types: slow (8 cells/sec) and fast (16 cells/sec). Numeric values are taken from BC.
+
 Projectiles have two penetration types: standard and enhanced. A standard projectile penetrates one quarter of a brick wall and cannot penetrate a concrete wall. An enhanced projectile penetrates half of a brick wall and can penetrate a concrete wall.
+
 When a projectile hits an obstacle, it affects the obstacle and disappears from the game field.
+
 When a projectile hits a wall that it can penetrate, the wall section perpendicular to the projectile trajectory is destroyed.
+
 When two projectiles collide, they destroy each other.
 
 ### Tank Destruction
 
 When a projectile hits a tank, the tank is destroyed, the shooting player gets a kill, and the target player gets a defeat.
+
 When defeated, the losing player's tank disappears and drops a Star bonus if it was level 2-3.
+
 When a player gets a kill, they receive one kill point (frag). Later, frags affect the player's final result.
 
 Rules for team play:
+
 If a player's projectile hits a friendly tank, that tank is immobilized for 3 sec.
+
 If there are living teammates, a Tank bonus drops.
 
 ### Bush
 
 When an object enters a bush, it disappears from the visibility area of non-allied players.
+
 The following can hide in a bush: tanks, projectiles, bonuses.
 
 ### Ice
 
 When a tank enters ice, sliding begins. After the engine stops (movement keys released), a sliding tank continues moving for 0.5 sec in the previous direction. The sliding time is taken from BC.
+
 If a sliding tank reaches ground or collides with an obstacle, it stops.
 
 ### Bonuses
@@ -131,6 +154,7 @@ When the tank level changes, one or more parameters change:
 * projectile penetration
 
 The tank appearance also changes with level. Sprites are taken entirely from BC.
+
 Level features are taken entirely from BC.
 
 | Level | Projectile Speed | Fire Rate | Penetration |
@@ -143,23 +167,33 @@ Level features are taken entirely from BC.
 ### Tank Visibility
 
 The player always sees their own tank, colored gold.
+
 The player sees allied tanks on the map and in their room, even in bushes, colored green.
+
 Enemy tanks are visible only if they are in the same room and not hiding in bushes, colored gray.
 
 ### Mini-map
 
 The player constantly sees a mini-map with rooms.
+
 Rooms with the dangerous zone are darkened in red.
+
 Rooms that will become dangerous in the next phase are darkened in yellow.
+
 Teammates are marked on the mini-map with large dots.
+
 The player is gold, teammates are green.
 
 ### Dangerous Zone
 
 The game is divided into several phases. In each phase, several rooms are marked that will become dangerous in the next phase. The safe zone will always remain a single connected area and will never split.
+
 In the penultimate phase, one room remains in the safe zone, and a victory-exit base appears there 5 seconds before the phase ends.
+
 In the final phase, everyone who has not exited dies; this is the cleanup phase.
+
 Players have an additional meter: dangerous-zone points, which decrease in the dangerous zone (a real value from 0 to 1). In each phase the damage per second in the dangerous zone increases. The meter restores at a rate of 1%/sec when the player is in the safe zone. The player loses when this meter reaches 0.
+
 Phase parameters
 
 | Number | Safe Rooms, % | Damage, %/sec | Duration, sec |
@@ -175,27 +209,37 @@ Phase parameters
 | 9 - Cleanup | 0 | 15 | 10 |
 
 Total time until cleanup: 150 seconds = 2.5 minutes.
+
 Total duration of all phases: 160 seconds < 3 minutes.
 
 ### Initial Placement
 
 Players choose an initial spawn room on an enlarged mini-map.
+
 At the start, there will definitely be no enemy tanks in the same room.
+
 Players may choose a room with allies and may not choose a room occupied by opponents.
+
 Players can see occupied rooms and therefore know the enemies' starting positions.
+
 If a player does not choose a room, they are placed into a random one.
+
 Temporary invulnerability is applied on initial spawn.
 
 ### Transition Between Rooms
 
 Crossing a room border transitions the tank into the neighboring room through that border.
+
 On outer edge rooms, an impassable barrier is placed along the map boundary.
+
 After entering a neighboring room, temporary invulnerability is applied to the player.
 
 ### Temporary Invulnerability
 
 Temporary invulnerability absorbs projectiles completely without explosions. Absorbed projectiles are removed from the game without any of the standard effects.
+
 On initial placement it is applied for 3 sec.
+
 When transitioning into a new room, temporary invulnerability is applied with duration depending on level. The level increases by 1 every 5 sec (the time needed to cross a room from one edge to the other) after a transition. After each transition, the level decreases by 1 and the timer resets. Maximum level is 4, minimum is 0.
 
 | Level | Time, sec |
@@ -229,6 +273,7 @@ When transitioning into a new room, temporary invulnerability is applied with du
 ## Numbering
 
 Rooms are numbered from left to right, top to bottom, row by row.
+
 Cells are numbered from left to right, top to bottom, row by row.
 
 ## Tank Model
@@ -245,19 +290,23 @@ Each tank has:
 
 The player can only change the tank's movement state. After receiving a movement command, that tank movement state changes.
 When the player presses the shoot button, the tank may fire. If enough time has passed since the previous shot according to the CD, the shoot command is executed.
+
 Shooting spawns a projectile and sets the shot time to the current time.
 
 ## Movement
 
 ### Integration
 
-   Add velocity to the coordinates.
+Add velocity to the coordinates.
 
 ### Collision Search
 
 For each cell, build a list of objects that occupy that cell. A tree is not needed because there are few cells and each will contain few moving objects. Objects intersecting multiple cells are added to each of those cell lists.
+
 On each physics simulation iteration, update the lists instead of rebuilding them from scratch.
+
 Only when several objects and 1+ moving object are found in the same cell, check each moving object against every other object.
+
 When collisions are found, apply all effects of each collision object.
 
 ### Collision Effects
@@ -286,10 +335,15 @@ This table shows what happens to the object in the row when colliding with the o
 ### Simplifications
 
 Objects move discretely by 1/32 of a cell.
+
 After processing each object, mark the cells where movement occurred. After processing all objects, search for collisions in the marked cells.
+
 After a bullet contacts a wall, find all affected cells and delete them.
+
 For the invisibility effect, bushes should have a separate invisibility area for bullets and a separate invisibility area for tanks.
+
 Create a separate area for each room to detect collisions with it.
+
 Create areas for the dangerous zone for each room as well.
 
 ### Effects in an Area
@@ -327,12 +381,15 @@ Create areas for the dangerous zone for each room as well.
 ## Map
 
 The client receives data about the initial placement of all map objects.
+
 The client receives event data for each map object, meaning the game field should always remain up to date.
 
 ## Client Data Updates
 
 Because all moving objects always move uniformly in straight lines, it is sufficient to send the client the initial point and movement direction. All other coordinates can be computed from the line equation.
+
 The client receives only events with changes in object state.
+
 State changes are considered to be:
 
 * appearance in the visibility area
@@ -348,7 +405,9 @@ After testing the physics engine.
 ## Safe Zone Shrinking
 
 The order in which rooms become part of the dangerous zone is formed at the room selection stage using a pre-generated key.
+
 The algorithm must return the same array of room numbers every time for the same run.
+
 The algorithm parameters are:
 
 1. random-number key;
@@ -372,7 +431,9 @@ Vertices that cause disconnections are vertices with 2 neighbors whose distance 
 ### Stage 1
 
 Contains the queue of active clients.
+
 When requesting to join a battle, the client is put into the queue and an attempt is made to create a session.
+
 When requesting to leave the battle queue, the client is removed from the queue.
 
 Attempt to create a session:
@@ -424,22 +485,35 @@ Tasks:
 ## Game Engine
 
 Works with all game entities.
+
 Requests a physics simulation tick from the physics engine and receives all events for collisions.
+
 Processes collisions and generates events.
+
 Routes events into the container.
+
 Loads the map into the physics engine and sends the map to clients.
+
 Generates the room-shrinking order.
+
 Generates teammate respawn bases.
+
 Creates player-controlled objects in the physics engine.
+
 Places player-controlled objects.
+
 Changes room states and generates room-state change events.
+
 Generates and returns events on movement-state changes and visibility changes.
+
 Generates events when objects are destroyed.
 
 ## Physics Engine
 
 Computes world physics for 1 tick on request and returns all events for that tick.
+
 Responsible for movement and collision detection.
+
 The world is discrete. The smallest part of space any object can move by is 1/32 of a cell. If an object does not move for several ticks, it is frozen and skips some calculations.
 
 ### Algorithm
@@ -471,6 +545,7 @@ Objects (size in parentheses):
 * base spawn point (1 x 1)
 
 Coordinates are integer values where 1 unit = 0.5 cell.
+
 The map is stored on the server in JSON format.
 
 # Graphics
@@ -478,8 +553,11 @@ The map is stored on the server in JSON format.
 ## Engine
 
 Use BC textures.
+
 Render by overlaying sprites.
+
 Update only the changing cells.
+
 Updates are performed in layers in this order:
 
 1. Fill black
@@ -491,7 +569,9 @@ Updates are performed in layers in this order:
 ## Stage 1
 
 Empty map with a moving player.
+
 Schematic tank.
+
 No animation.
 
 ## Stage 2
@@ -502,7 +582,9 @@ All textures.
 # Sound
 
 Use sound from BC.
+
 Find a ready-made collection or synthesize from the original assets.
+
 Play sound at the moment of the event.
 
 # Story
